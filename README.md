@@ -1,5 +1,6 @@
 # Dtap
 disease trend analysis platform accurately predicts the occurrence of diseases under mixed background
+
 ## `block()`
 
 对数据进行分块处理。
@@ -8,9 +9,9 @@ disease trend analysis platform accurately predicts the occurrence of diseases u
 
 计算数据的面积。
 
-## `trend()`
+## `trend(self, pos_value, neg_value)`
 
-分析数据的趋势。
+该函数的功能是分析正向和负向数据的趋势，将数据按照血液指标的正常范围分块，并计算每个区间的频数和面积，根据阈值筛选出有趋势的区间，并将结果存储在`self.pos_trend`和`self.neg_trend`中。
 
 ## `transform()`
 

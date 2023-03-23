@@ -17,7 +17,7 @@ disease trend analysis platform accurately predicts the occurrence of diseases u
 
 这个函数的功能是将一个包含数值和标签的数据框转换为一个包含字符串和标签的字典，其中字符串是根据数值在某个范围内的情况分配给它们的字母，它将结果存储在`self.str_train`中。
 
-## `transform_predict()`
+## `transfrom_predict(self, value)`
 
 这个函数的功能是将一个包含数值和标签的数据框转换为一个包含字符串和标签的字典，其中字符串是根据数值在某个范围内的情况分配给它们的字母，它将结果存储在`self.str_predict`中。
 

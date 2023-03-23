@@ -1,5 +1,5 @@
 from setuptools import setup
-from irap.__init__ import version
+from dtap.__init__ import version
 
 setup(name='dtap',
     version=version,

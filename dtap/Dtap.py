@@ -7,7 +7,10 @@ import os
 import math
 import numpy as np
 import pandas as pd
-from weblogo import weblogo
+try:
+    from .weblogo import weblogo
+except:
+    from weblogo import weblogo
 import sklearn
 import shap
 from sklearn.model_selection import GridSearchCV
@@ -67,8 +70,7 @@ class Dtap():
         }
     
     def __repr__(self):
-        # return an empty string or your custom message
-        return "Processing finished!"
+        return ""
 
     def block(self, standard_fs):
         min_fs = min(standard_fs)
@@ -123,30 +125,6 @@ class Dtap():
         for j in range(len(value)):
             line = list(value.iloc[j, :])
             mid = ''
-            # if line[-1] == 1:
-            #     for i in range(len(line[:-1])):
-            #         if self.pos_trend[i][1] <= line[i] <= self.pos_trend[i][2]:
-            #             mid += 'C'
-            #         elif self.pos_trend[i][0] <= line[i] < self.pos_trend[i][1]:
-            #             mid += 'D'
-            #         elif self.pos_trend[i][2] < line[i] <= self.pos_trend[i][3]:
-            #             mid += 'H'
-            #         elif line[i] > self.pos_trend[i][3]:
-            #             mid += 'P'
-            #         elif line[i] < self.pos_trend[i][0]:
-            #             mid += 'N'
-            # else:
-            #     for i in range(len(line[:-1])):
-            #         if self.neg_trend[i][1] <= line[i] <= self.neg_trend[i][2]:
-            #             mid += 'C'
-            #         elif self.neg_trend[i][0] <= line[i] < self.neg_trend[i][1]:
-            #             mid += 'D'
-            #         elif self.neg_trend[i][2] < line[i] <= self.neg_trend[i][3]:
-            #             mid += 'H'
-            #         elif line[i] > self.neg_trend[i][3]:
-            #             mid += 'P'
-            #         elif line[i] < self.neg_trend[i][0]:
-            #             mid += 'N'
             for i in range(len(line[:-1])):
                 if self.pos_trend[i][1] <= line[i] <= self.pos_trend[i][2]:
                     mid += 'C'
@@ -166,30 +144,6 @@ class Dtap():
         for j in range(len(value)):
             line = list(value.iloc[j, :])
             mid = ''
-            # if line[-1] == 1:
-            #     for i in range(len(line[:-1])):
-            #         if self.pos_trend[i][1] <= line[i] <= self.pos_trend[i][2]:
-            #             mid += 'C'
-            #         elif self.pos_trend[i][0] <= line[i] < self.pos_trend[i][1]:
-            #             mid += 'D'
-            #         elif self.pos_trend[i][2] < line[i] <= self.pos_trend[i][3]:
-            #             mid += 'H'
-            #         elif line[i] > self.pos_trend[i][3]:
-            #             mid += 'P'
-            #         elif line[i] < self.pos_trend[i][0]:
-            #             mid += 'N'
-            # else:
-            #     for i in range(len(line[:-1])):
-            #         if self.neg_trend[i][1] <= line[i] <= self.neg_trend[i][2]:
-            #             mid += 'C'
-            #         elif self.neg_trend[i][0] <= line[i] < self.neg_trend[i][1]:
-            #             mid += 'D'
-            #         elif self.neg_trend[i][2] < line[i] <= self.neg_trend[i][3]:
-            #             mid += 'H'
-            #         elif line[i] > self.neg_trend[i][3]:
-            #             mid += 'P'
-            #         elif line[i] < self.neg_trend[i][0]:
-            #             mid += 'N'
             for i in range(len(line[:-1])):
                 if self.pos_trend[i][1] <= line[i] <= self.pos_trend[i][2]:
                     mid += 'C'
@@ -289,16 +243,6 @@ class Dtap():
                     mid.append(0.8)
                 elif data['sequence'][i][j] == 'P':
                     mid.append(1.0)
-                # if data['sequence'][i][j] == 'N':
-                #     mid += [1,0,0,0,0]
-                # elif data['sequence'][i][j] == 'D':
-                #     mid += [0,1,0,0,0]
-                # elif data['sequence'][i][j] == 'C':
-                #     mid += [0,0,1,0,0]
-                # elif data['sequence'][i][j] == 'H':
-                #     mid += [0,0,0,1,0]
-                # elif data['sequence'][i][j] == 'P':
-                #     mid += [0,0,0,0,1]
             infor_data.append(mid)
         return infor_data
 
@@ -387,19 +331,9 @@ class Dtap():
             self.trend(pos_value, neg_value)
             # 提取趋势向量
             self.transfrom(value)
-            # 计算信息熵
-            # self.information(self.str_train)
             self.str_train['information'] = self.onehot(self.str_train)
         else:
             self.str_train = {'information': [], 'label': []}
-            # mx_max, mx_min = value.max().max(), value.min().min()
-            # for j in range(len(value)):
-            #     line = list(value.iloc[j, :])
-            #     mid = []
-            #     for i in range(len(line[:-1])):
-            #         mid.append((mx_max - line[i]) / (mx_max - mx_min))
-            #     self.str_train['information'].append(mid)
-            #     self.str_train['label'].append(line[-1])
             self.str_train['label'] = list(list(value.iloc[j, :])[-1] for j in range(len(value)))
             self.str_train['information'] = list(list(item) for item in MinMaxScaler().fit_transform(value.iloc[:, :-1]))
         # 构建模型
@@ -424,7 +358,7 @@ class Dtap():
                                                                  min_samples_split=2, random_state=0)
             self.model.fit(self.str_train['information'], self.str_train['label'])
         elif model == 'XGB':
-            self.model = XGBClassifier(eta=0.01, objective='binary:logistic', subsample=0.5,
+            self.model = XGBClassifier(eta=0.01, objective='binary:logistic', subsample=0.5, use_label_encoder=False,
                                        base_score=np.mean(self.str_train['label']), eval_metric='logloss')
             self.model.fit(self.str_train['information'], self.str_train['label'])
         elif model == 'STK':
@@ -439,7 +373,7 @@ class Dtap():
                     'DT': sklearn.tree.DecisionTreeClassifier(min_samples_split=2),
                     'RF': RandomForestClassifier(n_estimators=100, max_depth=None,
                                                  min_samples_split=2, random_state=0),
-                    'XGB': XGBClassifier(eta=0.01, objective='binary:logistic', subsample=0.5, base_score=np.mean(self.str_train['label']), eval_metric='logloss'),
+                    'XGB': XGBClassifier(eta=0.01, objective='binary:logistic', subsample=0.5, use_label_encoder=False, base_score=np.mean(self.str_train['label']), eval_metric='logloss')
                 }
             for key in self.model:
                 self.model[key].fit(self.str_train['information'], self.str_train['label'])
@@ -474,19 +408,9 @@ class Dtap():
         if is_trend:
             # 提取趋势向量
             self.transfrom_predict(value)
-            # 计算信息熵
-            # self.information_predict(self.str_predict)
             self.str_predict['information'] = self.onehot(self.str_predict)
         else:
             self.str_predict = {'information': [], 'label': []}
-            # mx_max, mx_min = value.max().max(), value.min().min()
-            # for j in range(len(value)):
-            #     line = list(value.iloc[j, :])
-            #     mid = []
-            #     for i in range(len(line[:-1])):
-            #         mid.append((mx_max - line[i]) / (mx_max - mx_min))
-            #     self.str_predict['information'].append(mid)
-            #     self.str_predict['label'].append(line[-1])
             self.str_predict['label'] = list(list(value.iloc[j, :])[-1] for j in range(len(value)))
             self.str_predict['information'] = list(list(item) for item in MinMaxScaler().fit_transform(value.iloc[:, :-1]))
         # 预测
@@ -578,24 +502,29 @@ class Dtap():
         return self
     
     def shap(self, item=None, plot=['bar', 'beeswarm', 'heatmap', 'force'], out=os.getcwd()):
+        print('Starting analyze with SHAP')
         cmap = LinearSegmentedColormap.from_list('Dtap', ['#6496AA', '#FFFFFF', '#CA6F64'])
         shap_model = sklearn.linear_model.LogisticRegression()
         shap_model.fit(np.array(self.str_train['information']), np.array(self.str_train['label']))
         explainer = shap.Explainer(shap_model, np.array(self.str_train['information']), feature_names=self.index)
         shap_values = explainer(np.array(self.str_predict['information']))
         if 'bar' in plot:
+            print('Plot shap-bar chart')
             shap.plots.bar(shap_values, show=False, max_display=60)
             plt.savefig(os.path.join(out, 'bar.png'), dpi=300, bbox_inches='tight')
             plt.close()
         if 'beeswarm' in plot:
+            print('Plot shap-beeswarm chart')
             shap.plots.beeswarm(shap_values, color=cmap, show=False, plot_size=[8,5], max_display=10)
             plt.savefig(os.path.join(out, 'beeswarm.png'), dpi=300, bbox_inches='tight')
             plt.close()
         if 'heatmap' in plot:
+            print('Plot shap-heatmap chart')
             shap.plots.heatmap(shap_values, cmap=cmap, show=False, max_display=10)
             plt.savefig(os.path.join(out, 'heatmap.png'), dpi=300, bbox_inches='tight')
             plt.close()
         if 'force' in plot:
+            print('Plot shap-force chart')
             if item:
                 shap.plots.force(shap_values[item], matplotlib=True, show=False)
                 plt.savefig(os.path.join(out, 'force.png'), dpi=300, bbox_inches='tight')
@@ -604,6 +533,7 @@ class Dtap():
                 shap.plots.force(shap_values[0], matplotlib=True, show=False)
                 plt.savefig(os.path.join(out, 'force.png'), dpi=300, bbox_inches='tight')
                 plt.close()
+        print('Processing finished!')
         return self
 
     def roc(self, all_tpr=None, all_fpr=None, label='ROC', color=['#525288','#F17666','#624941','#B90000','#D7A100','#1A6840','#BFAEA4'], lw=1, figsize=[5,5], dpi=300, xlabel='False Positive Rate', ylabel='True Positive Rate', legend="lower right", title='ROC_curve', out=os.getcwd()):
@@ -656,21 +586,25 @@ class Dtap():
             plt.savefig(os.path.join(out, title + '.png'))
         return self
     
-    def evaluate(self, Train, Test, indep=False, standard=None, threshold=None, models=['SVM','KNN','LR','RF','DT','XGB','STK'], c=None, g=None, cv=5, is_trend=True):
+    def evaluate(self, Train, Test=False, indep=False, standard=None, threshold=None, models=['SVM','KNN','LR','RF','DT','XGB','STK'], c=None, g=None, cv=5, is_trend=True):
         self.evaluate_results = {}
         self.evaluate_orignal = {key: {'value':[], 'label':[]} for key in models}
+        print('Starting evaluate models')
         for key in models:
+            print(key)
             self.fit(Train, standard=standard, threshold=threshold, model=key, c=c, g=g, is_trend=is_trend)
             self.crossv(cv=5)
             self.evaluate_results[key] = [self.cv_result]
-            self.predict(Test, is_trend=is_trend)
-            self.evaluate_results[key].append(self.predict_result)
-            self.evaluate_orignal[key]['value'] = [self.predict_value]
-            self.evaluate_orignal[key]['label'] = self.str_predict['label']
+            if type(Test) != bool:
+                self.predict(Test, is_trend=is_trend)
+                self.evaluate_results[key].append(self.predict_result)
+                self.evaluate_orignal[key]['value'] = [self.predict_value]
+                self.evaluate_orignal[key]['label'] = self.str_predict['label']
             if type(indep) != bool:
                 self.predict(indep, is_trend=is_trend)
                 self.evaluate_results[key].append(self.predict_result)
                 self.evaluate_orignal[key]['value'].append(self.predict_value)
+        print('Processing finished!')
         return self
     
     def views(self, results=None, res=0, out='numpy', title=''):
@@ -694,18 +628,21 @@ class Dtap():
         elif out == 'csv':
             return '\n'.join(list(','.join(item) for item in np.array(data).T.tolist()))
     
-    def thresholdSearch(self, Train, Test, indep=None, res=1, order='mcc', standard=None, model='RF'):
+    def thresholdSearch(self, Train, Test=False, indep=False, res=0, order='mcc', standard=None, model='RF'):
         k_resault = {}
+        print('Starting search best k from 0.04 to 0.96')
         for i in range(1, 25):
             k_resault[i/25] = []
-            self.fit(Train, standard=standard, threshold=i/25, model='LR')
+            self.fit(Train, standard=standard, threshold=i/25, model=model)
             self.crossv(cv=5)
             k_resault[i/25].append(self.cv_result)
-            self.predict(Test)
-            k_resault[i/25].append(self.predict_result)
-            if indep:
+            if type(Test) != bool:
+                self.predict(Test)
+                k_resault[i/25].append(self.predict_result)
+            if type(indep) != bool:
                 self.predict(indep)
                 k_resault[i/25].append(self.predict_result)
+            print('k='+str(i/25)+'\t'+order+'='+str(round(k_resault[i/25][res][order], 3)))
         # 保存最优结果
         best_k, best_performance = 0, 0
         for key in k_resault:
@@ -714,7 +651,6 @@ class Dtap():
                 best_k = key
         self.threshold = best_k
         # 展示结果
-        print('\n'.join(list('k='+str(key)+'\t'+order+'='+str(round(k_resault[key][res][order], 3)) for key in k_resault)))
         print('\nbest k='+str(best_k))
         return self
 
@@ -731,7 +667,10 @@ class Dtap():
                 'res': res,
                 'istrend': is_trend
             }
+        print('Starting analyze feature importance with different models')
         for key in models:
+            print('')
+            print(key+' method='+rule)
             self.fit(Train, model=key, c=c, g=g, is_trend=is_trend, standard=standard)
             self.select(rule=rule, res=res)
             self.select_results['performance'][key] = self.selection.performance
@@ -741,6 +680,8 @@ class Dtap():
             self.select_results['scores'] = list(self.selection.scores_)
             self.select_results['pvalue'] = list(self.selection.pvalues_)
             self.select_results['best_feature'][key] = self.selection.best_feature
+        print('')
+        print('\nProcessing finished!')
         return self
     
     def feature(self, results=None, out='numpy'):
@@ -766,6 +707,7 @@ class Dtap():
             return '\n'.join(list(','.join(item) for item in performance.tolist())), '\n'.join(list(','.join(item) for item in weight.tolist())), '\n'.join(list(','.join(item) for item in total.tolist()))
         
     def multiroc(self, Train, Test, evalres=False, rocres=False, title='ROC_curve_all', out=os.getcwd(), models=['SVM','KNN','LR','RF','DT','XGB','STK'], c=None, g=None, standard=None, is_trend=True):
+        print('Starting plot ROC curves with different models')
         if rocres:
             self.roc_result = rocres
         else:
@@ -774,6 +716,7 @@ class Dtap():
             else:
                 self.roc_result = {key + ' (base)': [] for key in models}
             for key in self.roc_result:
+                print(key)
                 if evalres:
                     self.predict_value = evalres[key.split(' ')[0]]['value']
                     self.str_predict['label'] = evalres[key.split(' ')[0]]['label']
@@ -786,9 +729,11 @@ class Dtap():
         self.all_fpr=list(self.roc_result[key][0] for key in self.roc_result)
         self.all_tpr=list(self.roc_result[key][1] for key in self.roc_result)
         self.roc(all_fpr=self.all_fpr, all_tpr=self.all_tpr, label=list(key for key in self.roc_result), title=title, out=out)
+        print('Processing finished!')
         return self
     
     def multiprc(self, Train, Test, evalres=False, prcres=False, title='PRC_curve_all', out=os.getcwd(), models=['SVM','KNN','LR','RF','DT','XGB','STK'], c=None, g=None, standard=None, is_trend=True):
+        print('Starting plot PRC curves with different models')
         if prcres:
             self.prc_result = prcres
         else:
@@ -797,6 +742,7 @@ class Dtap():
             else:
                 self.prc_result = {key + ' (base)': [] for key in models}
             for key in self.prc_result:
+                print(key)
                 if evalres:
                     self.predict_value = evalres[key.split(' ')[0]]['value']
                     self.str_predict['label'] = evalres[key.split(' ')[0]]['label']
@@ -811,30 +757,5 @@ class Dtap():
         self.all_pre=list(self.prc_result[key][0] for key in self.prc_result)
         self.all_rec=list(self.prc_result[key][1] for key in self.prc_result)
         self.prc(all_pre=self.all_pre, all_rec=self.all_rec, index=list(self.prc_result[key][2] for key in self.prc_result), value=list(self.prc_result[key][3] for key in self.prc_result), label=list(key for key in self.prc_result), title=title, out=out)
+        print('Processing finished!')
         return self
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    

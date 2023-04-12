@@ -6,7 +6,7 @@ Git is recommended for Dtap installation.
 # install by github
 pip install git+https://github.com/KingoftheNight/Dtap.git
 # install by gitee
-`pip install git+https://gitee.com/KingoftheNight/Dtap.git`
+pip install git+https://gitee.com/KingoftheNight/Dtap.git
 ```
 ## Import Dtap
 ```python

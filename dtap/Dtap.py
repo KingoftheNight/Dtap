@@ -400,7 +400,11 @@ class Dtap():
             self.cv_result = self.calculate(list(self.str_train['label']), list(y_predict))
         return self
 
-    def predict(self, value, threshold=0.5, is_trend=True, weight=0.024):
+    def predict(self, value, threshold=0.5, is_trend=True, weight=0.024, model=None):
+        if 'label' not in value:
+            value['label'] = list(0 for i in range(len(value)))
+        if model != None:
+            self.model = model
         # 数据预处理
         if list(value.columns)[:-1] != self.index:
             print('Disease labels dismatch!')
@@ -422,6 +426,7 @@ class Dtap():
         else:
             self.predict_value = self.model.predict_proba(self.str_predict['information'])
         y_predict = self.V_to_L(self.predict_value, threshold)
+        self.predict_label = y_predict
         self.predict_result = self.calculate(list(self.str_predict['label']), list(y_predict))
         return self
 
@@ -507,30 +512,30 @@ class Dtap():
         shap_model = sklearn.linear_model.LogisticRegression()
         shap_model.fit(np.array(self.str_train['information']), np.array(self.str_train['label']))
         explainer = shap.Explainer(shap_model, np.array(self.str_train['information']), feature_names=self.index)
-        shap_values = explainer(np.array(self.str_predict['information']))
+        self.shap_values = explainer(np.array(self.str_predict['information']))
         if 'bar' in plot:
             print('Plot shap-bar chart')
-            shap.plots.bar(shap_values, show=False, max_display=60)
+            shap.plots.bar(self.shap_values, show=False, max_display=60)
             plt.savefig(os.path.join(out, 'bar.png'), dpi=300, bbox_inches='tight')
             plt.close()
         if 'beeswarm' in plot:
             print('Plot shap-beeswarm chart')
-            shap.plots.beeswarm(shap_values, color=cmap, show=False, plot_size=[8,5], max_display=10)
+            shap.plots.beeswarm(self.shap_values, color=cmap, show=False, plot_size=[8,5], max_display=10)
             plt.savefig(os.path.join(out, 'beeswarm.png'), dpi=300, bbox_inches='tight')
             plt.close()
         if 'heatmap' in plot:
             print('Plot shap-heatmap chart')
-            shap.plots.heatmap(shap_values, cmap=cmap, show=False, max_display=10)
+            shap.plots.heatmap(self.shap_values, cmap=cmap, show=False, max_display=10)
             plt.savefig(os.path.join(out, 'heatmap.png'), dpi=300, bbox_inches='tight')
             plt.close()
         if 'force' in plot:
             print('Plot shap-force chart')
             if item:
-                shap.plots.force(shap_values[item], matplotlib=True, show=False)
+                shap.plots.force(self.shap_values[item], matplotlib=True, show=False)
                 plt.savefig(os.path.join(out, 'force.png'), dpi=300, bbox_inches='tight')
                 plt.close()
             else:
-                shap.plots.force(shap_values[0], matplotlib=True, show=False)
+                shap.plots.force(self.shap_values[0], matplotlib=True, show=False)
                 plt.savefig(os.path.join(out, 'force.png'), dpi=300, bbox_inches='tight')
                 plt.close()
         print('Processing finished!')

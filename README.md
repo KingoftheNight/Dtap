@@ -111,7 +111,7 @@ classfier.evaluate(value, Test=False, indep=False, standard=None, threshold=None
 - `indep`（Optional）：DataFrame format, it has the same function as the parameter in part 5.
 - `standard`（Optional）：Dict format, it has the same function as the parameter in part 5.
 - `threshold`（Optional）：Float format, it has the same function as the parameter in part 6.
-- `models`（Optional）：String format, it has the same function as the parameter in part 10.
+- `models`（Optional）：List format, Said to be involved in the analysis of the model, the default value is ['SVM','KNN','LR','RF','DT','XGB','STK'].
 - `c`（Optional）：Float format, it has the same function as the parameter in part 6.
 - `g`（Optional）：Float format, it has the same function as the parameter in part 6.
 - `cv`（Optional）：Integer format, it has the same function as the parameter in part 8.

@@ -247,30 +247,23 @@ class Dtap():
         return infor_data
 
     def visual(self, out_path=os.getcwd(), seq=False, res=0):
-        if res == 0:
-            if seq:
-                weblogo(data=seq, tp='d', x_label=self.index, out=out_path)
+        if seq:
+            weblogo(data=seq, tp='d', x_label=self.index, out=out_path)
+        else:
+            pos_seq, neg_seq = [], []
+            if res == 0:
+                sequence = self.str_train['sequence']
+                label = self.str_train['label']
             else:
-                pos_seq, neg_seq = [], []
-                for i in range(len(self.str_train['sequence'])):
-                    if self.str_train['label'][i] == 1:
-                        pos_seq.append(self.str_train['sequence'][i])
-                    else:
-                        neg_seq.append(self.str_train['sequence'][i])
-                weblogo(data=pos_seq, tp='d', x_label=self.index, out=out_path+'-positive.svg')
-                weblogo(data=neg_seq, tp='d', x_label=self.index, out=out_path+'-negative.svg')
-        elif res == 1:            
-            if seq:
-                weblogo(data=seq, tp='d', x_label=self.index, out=out_path)
-            else:
-                pos_seq, neg_seq = [], []
-                for i in range(len(self.str_predict['sequence'])):
-                    if self.str_predict['label'][i] == 1:
-                        pos_seq.append(self.str_predict['sequence'][i])
-                    else:
-                        neg_seq.append(self.str_predict['sequence'][i])
-                weblogo(data=pos_seq, tp='d', x_label=self.index, out=out_path+'-positive.svg')
-                weblogo(data=neg_seq, tp='d', x_label=self.index, out=out_path+'-negative.svg')
+                sequence = self.str_predict['sequence']
+                label = self.str_predict['label']
+            for i in range(len(sequence)):
+                if label[i] == 1:
+                    pos_seq.append(sequence[i])
+                else:
+                    neg_seq.append(sequence[i])
+            weblogo(data=pos_seq, tp='d', x_label=self.index, out=out_path+'-positive.svg')
+            weblogo(data=neg_seq, tp='d', x_label=self.index, out=out_path+'-negative.svg')
 
     def svm_grid(self, train_data, train_label):
         my_svm = svm.SVC(decision_function_shape="ovo", random_state=0)

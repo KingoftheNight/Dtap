@@ -78,6 +78,7 @@ classfier.predict(value, threshold=0.5, is_trend=True, weight=0.024, model=None)
 ```python
 classfier.predict(Test)
 classfier.predict_result
+classfier.predict_label
 classfier.predict_value
 ```
 ![mark](http://img.frankgene.top/blog/20230413/YS9EXdIwYcwH.png)

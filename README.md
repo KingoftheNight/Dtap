@@ -15,7 +15,7 @@ pip install git+https://gitee.com/KingoftheNight/Dtap.git
 ## 2. Import Dtap
 ```python
 import pandas as pd
-from Dtap import Dtap
+from dtap import Dtap
 ```
 ## 3. Import Datasets
 We provided three small data sets for model testing, and in the label column, 1 represents cervical cancer and 0 represents patients with other diseases. These data are for demonstration only, and the calculated results do not represent the real performance of the model.

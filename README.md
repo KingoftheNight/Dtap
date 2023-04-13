@@ -269,3 +269,9 @@ prc_2 = classfier.multiprc(Train, Test, models=['KNN','LR','RF'], is_trend=False
 classfier.multiprc([], [], prcres={**prc_1, **prc_2})
 ```
 ![mark](http://img.frankgene.top/blog/20230413/GcnJB8l9CCyX.png)
+## 17. Weblogo for input data sets
+```python
+classfier.visual(out_path=os.getcwd(), res=0)
+```
+- `out_path`（Optional）：String format, represents the output path.
+- `res`（Optional）：Integer format, represents the target data set. 0 is the training set, and 1 is the testing set.

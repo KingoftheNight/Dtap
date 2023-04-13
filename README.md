@@ -275,8 +275,22 @@ classfier.multiprc([], [], prcres={**prc_1, **prc_2})
 ```
 ![mark](http://img.frankgene.top/blog/20230413/GcnJB8l9CCyX.png)
 ## 17. Weblogo for input data sets
+In Dtap, this function can help user to draw weblogo by input dataset's sequence information. If user choose upload a target sequences set with 'seq', Dtap will return one weblogo image; If user dose not choose 'seq', Dtap will return two weblogo images with positive and negative sequences, respectively.
 ```python
-classfier.visual(out_path=os.getcwd(), res=0)
+classfier.visual(seq=False, res=0, out_path=os.getcwd())
 ```
+- `seq`（Optional）：Bool format, represents the target sequences list for weblogo. The default is False.
+- `res`（Optional）：Integer format, represents the target data set. The default is 0 (0 is the training set, and 1 is the testing set).
 - `out_path`（Optional）：String format, represents the output path.
-- `res`（Optional）：Integer format, represents the target data set. 0 is the training set, and 1 is the testing set.
+### Example 1
+```python
+classfier.visual(seq=classfier.str_train['sequence'], out_path='total.svg')
+```
+![mark](http://img.frankgene.top/blog/20230413/uVGOHVkkK93q.png)
+### Example 2
+```python
+classfier.visual(out_path='train')
+```
+![mark](http://img.frankgene.top/blog/20230413/UdwdlE11bD6l.png)
+
+![mark](http://img.frankgene.top/blog/20230413/jH5mSqxkxSXG.png)

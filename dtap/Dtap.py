@@ -506,7 +506,7 @@ class Dtap():
                 self.selection.best_feature['information'][j].append(self.str_train['information'][j][i])
         return self
     
-    def shap(self, item=None, plot=['bar', 'beeswarm', 'heatmap', 'force'], out=os.getcwd()):
+    def shap(self, item=0, plot=['bar', 'beeswarm', 'heatmap', 'force'], out=os.getcwd()):
         print('Starting analyze with SHAP')
         cmap = LinearSegmentedColormap.from_list('Dtap', ['#6496AA', '#FFFFFF', '#CA6F64'])
         shap_model = sklearn.linear_model.LogisticRegression()
@@ -530,14 +530,9 @@ class Dtap():
             plt.close()
         if 'force' in plot:
             print('Plot shap-force chart')
-            if item:
-                shap.plots.force(self.shap_values[item], matplotlib=True, show=False)
-                plt.savefig(os.path.join(out, 'force.png'), dpi=300, bbox_inches='tight')
-                plt.close()
-            else:
-                shap.plots.force(self.shap_values[0], matplotlib=True, show=False)
-                plt.savefig(os.path.join(out, 'force.png'), dpi=300, bbox_inches='tight')
-                plt.close()
+            shap.plots.force(self.shap_values[item], matplotlib=True, show=False)
+            plt.savefig(os.path.join(out, 'force.png'), dpi=300, bbox_inches='tight')
+            plt.close()
         print('Processing finished!')
         return self
 
@@ -711,7 +706,7 @@ class Dtap():
         elif out == 'csv':
             return '\n'.join(list(','.join(item) for item in performance.tolist())), '\n'.join(list(','.join(item) for item in weight.tolist())), '\n'.join(list(','.join(item) for item in total.tolist()))
         
-    def multiroc(self, Train, Test, evalres=False, rocres=False, title='ROC_curve_all', out=os.getcwd(), models=['SVM','KNN','LR','RF','DT','XGB','STK'], c=None, g=None, standard=None, is_trend=True):
+    def multiroc(self, Train, Test, rocres=False, title='ROC_curve_all', out=os.getcwd(), models=['SVM','KNN','LR','RF','DT','XGB','STK'], c=None, g=None, standard=None, is_trend=True):
         print('Starting plot ROC curves with different models')
         if rocres:
             self.roc_result = rocres
@@ -722,12 +717,8 @@ class Dtap():
                 self.roc_result = {key + ' (base)': [] for key in models}
             for key in self.roc_result:
                 print(key)
-                if evalres:
-                    self.predict_value = evalres[key.split(' ')[0]]['value']
-                    self.str_predict['label'] = evalres[key.split(' ')[0]]['label']
-                else:
-                    self.fit(Train, model=key.split(' ')[0], c=c, g=g, standard=standard, is_trend=is_trend)
-                    self.predict(Test)
+                self.fit(Train, model=key.split(' ')[0], c=c, g=g, standard=standard, is_trend=is_trend)
+                self.predict(Test)
                 self.roc(label='multy', out=False)
                 self.roc_result[key].append(self.fpr)
                 self.roc_result[key].append(self.tpr)
@@ -737,7 +728,7 @@ class Dtap():
         print('Processing finished!')
         return self
     
-    def multiprc(self, Train, Test, evalres=False, prcres=False, title='PRC_curve_all', out=os.getcwd(), models=['SVM','KNN','LR','RF','DT','XGB','STK'], c=None, g=None, standard=None, is_trend=True):
+    def multiprc(self, Train, Test, prcres=False, title='PRC_curve_all', out=os.getcwd(), models=['SVM','KNN','LR','RF','DT','XGB','STK'], c=None, g=None, standard=None, is_trend=True):
         print('Starting plot PRC curves with different models')
         if prcres:
             self.prc_result = prcres
@@ -748,12 +739,8 @@ class Dtap():
                 self.prc_result = {key + ' (base)': [] for key in models}
             for key in self.prc_result:
                 print(key)
-                if evalres:
-                    self.predict_value = evalres[key.split(' ')[0]]['value']
-                    self.str_predict['label'] = evalres[key.split(' ')[0]]['label']
-                else:
-                    self.fit(Train, model=key.split(' ')[0], c=c, g=g, standard=standard, is_trend=is_trend)
-                    self.predict(Test)
+                self.fit(Train, model=key.split(' ')[0], c=c, g=g, standard=standard, is_trend=is_trend)
+                self.predict(Test)
                 self.prc(label='multy', out=False)
                 self.prc_result[key].append(self.pre)
                 self.prc_result[key].append(self.rec)

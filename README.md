@@ -2,6 +2,10 @@
 The following is a detailed introduction to the main functions of the Dtap model, its parameters, and the methods it calls.
 ## 1. Install
 Git is recommended for Dtap installation.
+```bash
+# install git
+conda install git
+```
 ```python
 # install by github
 pip install git+https://github.com/KingoftheNight/Dtap.git

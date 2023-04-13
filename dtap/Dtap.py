@@ -246,13 +246,11 @@ class Dtap():
             infor_data.append(mid)
         return infor_data
 
-    def visual(self, out_path=None):
-        if out_path:
+    def visual(self, out_path=os.getcwd(), res=0):
+        if res == 0:
             weblogo(data=self.str_train['sequence'], tp='d', x_label=self.index, out=out_path)
+        elif res == 1:            
             weblogo(data=self.str_predict['sequence'], tp='d', x_label=self.index, out=out_path)
-        else:
-            weblogo(data=self.str_train['sequence'], tp='d', x_label=self.index)
-            weblogo(data=self.str_predict['sequence'], tp='d', x_label=self.index)
 
     def svm_grid(self, train_data, train_label):
         my_svm = svm.SVC(decision_function_shape="ovo", random_state=0)

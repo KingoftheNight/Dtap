@@ -9,7 +9,7 @@ setup(name='dtap',
     author_email='1694822092@qq.com',
     license='BSD 2-Clause',
     packages=['dtap'],
-    install_requires=['shap', 'numpy', 'scikit-learn', 'pandas', 'xgboost', 'skrebate', 'matplotlib'],
+    install_requires=['shap', 'numpy', 'scikit-learn', 'pandas', 'xgboost', 'skrebate', 'matplotlib', 'ipython'],
     entry_points={
         'console_scripts': [
         'dtap=dtap.Dtap:Dtap',

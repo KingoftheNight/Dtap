@@ -102,7 +102,7 @@ classfier.roc(label='PRC', color=['#525288','#F17666','#624941','#B90000','#D7A1
 - `legend`（Optional）：String format, it has the same function as the parameter in part 11.
 - `title`（Optional）：String format, it has the same function as the parameter in part 11.
 - `out`（Optional）：String format, it has the same function as the parameter in part 11.
-## 13. Model Evaluation
+## 13. Models Evaluation
 ```python
 classfier.evaluate(value, Test=False, indep=False, standard=None, threshold=None, models=['SVM','KNN','LR','RF','DT','XGB','STK'], c=None, g=None, cv=5, is_trend=True)
 ```
@@ -116,8 +116,48 @@ classfier.evaluate(value, Test=False, indep=False, standard=None, threshold=None
 - `g`（Optional）：Float format, it has the same function as the parameter in part 6.
 - `cv`（Optional）：Integer format, it has the same function as the parameter in part 8.
 - `is_trend`（Optional）：Bool format, it has the same function as the parameter in part 6.
-
-
+## 14. Feature Selection with Different Models
+```python
+classfier.analyze(value, models=['SVM','KNN','LR','RF','DT','XGB','STK'], c=None, g=None, standard=None, is_trend=True, rule='ANOVA', res='f1')
+```
+- `value`（Required）：DataFrame format, it has the same function as the parameter in part 5.
+- `models`（Optional）：List format, it has the same function as the parameter in part 13.
+- `c`（Optional）：Float format, it has the same function as the parameter in part 6.
+- `g`（Optional）：Float format, it has the same function as the parameter in part 6.
+- `standard`（Optional）：Dict format, it has the same function as the parameter in part 5.
+- `is_trend`（Optional）：Bool format, it has the same function as the parameter in part 6.
+- `rule`（Optional）：String format, it has the same function as the parameter in part 9.
+- `res`（Optional）：String format, it has the same function as the parameter in part 9.
+## 15. ROC Curves with Different Models
+```python
+classfier.multiroc(Train, Test, evalres=False, rocres=False, title='ROC_curve_all', out=os.getcwd(), models=['SVM','KNN','LR','RF','DT','XGB','STK'], c=None, g=None, standard=None, is_trend=True)
+```
+- `Train`（Required）：DataFrame format, represents the input training set.
+- `Test`（Required）：DataFrame format, represents the testing training set.
+- `evalres`（Optional）：Dict format, indicates that Dtap uses the part13 function to parse the result. The default is False. If the value is passed in, this analysis is used in preference to drawing the picture, rather than recalculating with Train and Test.
+- `rocres`（Optional）：Dict format, indicates that Dtap uses the part15 function to parse the result. The default is False. If the value is passed in, this analysis is used in preference to drawing the picture, rather than recalculating with Train and Test and evalres.
+- `title`（Optional）：String format, it has the same function as the parameter in part 11.
+- `out`（Optional）：String format, it has the same function as the parameter in part 11.
+- `models`（Optional）：List format, it has the same function as the parameter in part 13.
+- `c`（Optional）：Float format, it has the same function as the parameter in part 6.
+- `g`（Optional）：Float format, it has the same function as the parameter in part 6.
+- `standard`（Optional）：Dict format, it has the same function as the parameter in part 6.
+- `is_trend`（Optional）：Bool format, it has the same function as the parameter in part 6.
+## 16. PRC Curves with Different Models
+```python
+classfier.multiprc(Train, Test, evalres=False, prcres=False, title='PRC_curve_all', out=os.getcwd(), models=['SVM','KNN','LR','RF','DT','XGB','STK'], c=None, g=None, standard=None, is_trend=True)
+```
+- `Train`（Required）：DataFrame format, represents the input training set.
+- `Test`（Required）：DataFrame format, represents the testing training set.
+- `evalres`（Optional）：Dict format, indicates that Dtap uses the part 13 function to parse the result. The default is False. If the value is passed in, this analysis is used in preference to drawing the picture, rather than recalculating with Train and Test.
+- `prcres`（Optional）：Dict format, indicates that Dtap uses the part 16 function to parse the result. The default is False. If the value is passed in, this analysis is used in preference to drawing the picture, rather than recalculating with Train and Test and evalres.
+- `title`（Optional）：String format, it has the same function as the parameter in part 11.
+- `out`（Optional）：String format, it has the same function as the parameter in part 11.
+- `models`（Optional）：List format, it has the same function as the parameter in part 13.
+- `c`（Optional）：Float format, it has the same function as the parameter in part 6.
+- `g`（Optional）：Float format, it has the same function as the parameter in part 6.
+- `standard`（Optional）：Dict format, it has the same function as the parameter in part 6.
+- `is_trend`（Optional）：Bool format, it has the same function as the parameter in part 6.
 
 
 

@@ -729,7 +729,7 @@ class Dtap():
             for key in self.roc_result:
                 print(key)
                 self.fit(Train, model=key.split(' ')[0], c=c, g=g, standard=standard, is_trend=is_trend)
-                self.predict(Test)
+                self.predict(Test, is_trend=is_trend)
                 self.roc(label='multy', out=False)
                 self.roc_result[key].append(self.fpr)
                 self.roc_result[key].append(self.tpr)
@@ -751,7 +751,7 @@ class Dtap():
             for key in self.prc_result:
                 print(key)
                 self.fit(Train, model=key.split(' ')[0], c=c, g=g, standard=standard, is_trend=is_trend)
-                self.predict(Test)
+                self.predict(Test, is_trend=is_trend)
                 self.prc(label='multy', out=False)
                 self.prc_result[key].append(self.pre)
                 self.prc_result[key].append(self.rec)
